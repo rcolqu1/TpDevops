@@ -1,3 +1,4 @@
+
 name: CI Pipeline
 
 on:
@@ -13,7 +14,7 @@ permissions:
 
 jobs:
   build:
-    name: Python and Docker validation
+    name: Python, Testing and Docker
     runs-on: ubuntu-latest
 
     steps:
@@ -25,8 +26,16 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
       - name: Validate Python syntax
         run: python -m compileall -q .
+
+      - name: Run automated tests
+        run: pytest -v
 
       - name: Build Docker image
         run: docker build -t mikrotik-whatsapp-alerts:test .
